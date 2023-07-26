@@ -103,6 +103,7 @@ const cotrans = new CortransApi(process.argv[2], process.argv[3]);
 const root = "in";
 const files = [];
 for await(const entry of walk(root)) {
+  if(![".png", ".jpg"].includes(path.extname(entry))) continue;
   files.push(entry);
 }
 
