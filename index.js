@@ -23,9 +23,8 @@ class TranslateConfig {
 }
 
 class CortransApi {
-  constructor(apiUrl, resultsUrl) {
+  constructor(apiUrl) {
     this.apiUrl = apiUrl;
-    this.resultsUrl = resultsUrl;
   }
 
   downloadFinal(taskId, dest) {
@@ -34,7 +33,7 @@ class CortransApi {
       writer.on('error', rej);
       writer.on('close', () => res(dest));
 
-      const downloadUrl = `${this.resultsUrl}/${taskId}/final.jpg`;
+      const downloadUrl = `${this.apiUrl}/result/${taskId}`;
       (await axios.get(downloadUrl, {
         responseType: "stream"
       })).data.pipe(writer);
@@ -92,13 +91,13 @@ async function translate(f, out) {
 }
 
 const argc = process.argv.length - 2;
-if(argc !== 2) {
+if(argc !== 1) {
   console.log(`Wrong number of args ${argc} != 2`);
   process.exit(1);
 }
 
-console.log(`Initializing Cotrans with API url: ${process.argv[2]}, Results url: ${process.argv[3]}`);
-const cotrans = new CortransApi(process.argv[2], process.argv[3]);
+console.log(`Initializing with API url: ${process.argv[2]}`);
+const cotrans = new CortransApi(process.argv[2]);
 
 const root = "in";
 const files = [];
